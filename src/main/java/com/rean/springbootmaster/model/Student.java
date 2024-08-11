@@ -1,7 +1,15 @@
 package com.rean.springbootmaster.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "Student")
 @Table(
         name = "student",
