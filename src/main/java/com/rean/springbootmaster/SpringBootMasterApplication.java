@@ -6,6 +6,11 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 @SpringBootApplication
 public class SpringBootMasterApplication {
@@ -18,35 +23,49 @@ public class SpringBootMasterApplication {
 
 	@PostConstruct
 	public void init() {
-		Student student = Student.builder()
-				.firstName("Rean")
-				.lastName("Code")
-				.age(25)
-				.email("reancode@gmail.com")
-				.phoneNumber("1234567890")
-				.address("Phnom Penh")
-				.build();
 
-		studentRepository.save(student);
+		List<Student> students = List.of(
+				Student.builder()
+						.firstName("Rean")
+						.lastName("Code")
+						.age(25)
+						.email("code123@gmail.com")
+						.phoneNumber("089256789")
+						.address("Phnom Penh")
+						.build(),
+				Student.builder()
+						.firstName("Rean")
+						.lastName("Java")
+						.age(25)
+						.email("rean123@gmail.com")
+						.phoneNumber("0123456789")
+						.address("Kompong Cham")
+						.build(),
+				Student.builder()
+						.firstName("Rean")
+						.lastName("Spring")
+						.age(25)
+						.email("reanspring@gmail.com")
+						.phoneNumber("086789123")
+						.address("Kompong Thom")
+						.build()
+		);
 
-		var fetchStudentFromDB = studentRepository.findFirstByPhoneNumber("1234567890");
-		System.out.println("Student with phone number 1234567890");
-		System.out.println(fetchStudentFromDB.orElse(null));
+		// Save
+		studentRepository.saveAll(students);
 
-		var fetchStudentFromDB1 = studentRepository.findAllByAddress("Phnom Penh");
-		System.out.println("Students with address Phnom Penh");
-		fetchStudentFromDB1.forEach(System.out::println);
+		// Sorting
+		Sort sort = Sort.by(Sort.Direction.ASC, "address");
+		List<Student> studentList = studentRepository.findAll(sort);
+		System.out.println("Student List: ");
+		studentList.forEach(System.out::println);
 
-		var fetchStudentFromDB2 = studentRepository.findAllByAgeGreaterThan(20);
-		System.out.println("Students with age greater than 20");
-		fetchStudentFromDB2.forEach(System.out::println);
+		// Pagination
+		PageRequest pageRequest = PageRequest
+				.of(0, 2, Sort.by("address").ascending());
+		Page<Student> studentsPage = studentRepository.findAll(pageRequest);
+		System.out.println("Student Page: " + pageRequest.getPageSize());
 
-		studentRepository.deleteStudentById(1);
-		System.out.println("Student with id 1 is deleted");
-
-		var fetchStudentFromDB3 = studentRepository.findAll();
-		System.out.println("All students in DB");
-		fetchStudentFromDB3.forEach(System.out::println);
 	}
 
 }
