@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: customer-services
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_io
+    password: password
+    username: codestorykh
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+# Swagger Configuration
+# access url: http://localhost:8080/swagger-ui/index.html#/
+codestorykh:
+  openapi:
+    dev-url: http://localhost:8080
+    prod-url: http://localhost:8080
+springdoc:
+  swagger-ui:
+    try-it-out-enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    filter: true
+  api-docs:
+    path: /codestorykh-api-docs
+  packages-to-scan: com.rean.springbootmaster.user.controller
+  packages-to-exclude: com.rean.springbootmaster.todo
