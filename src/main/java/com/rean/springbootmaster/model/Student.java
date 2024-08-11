@@ -3,6 +3,19 @@ package com.rean.springbootmaster.model;
 import jakarta.persistence.*;
 
 @Entity(name = "Student")
+@Table(
+        name = "student",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "student_email_unique",
+                        columnNames = "email"
+                ),
+                @UniqueConstraint(
+                        name = "student_phone_number_unique",
+                        columnNames = "phone_number"
+                )
+        }
+)
 public class Student {
 
     @Id
