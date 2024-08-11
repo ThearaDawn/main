@@ -28,16 +28,18 @@ public class SpringBootMasterApplication {
 				.build();
 
 		studentRepository.save(student);
-		System.out.println("Log after save student: " + student);
 
-		var students = studentRepository.findAll();
-		System.out.println("Log after fetch all students: " + students);
+		var fetchStudentFromDB = studentRepository.findFirstByPhoneNumber("1234567890");
+		System.out.println("Student with phone number 1234567890");
+		System.out.println(fetchStudentFromDB.orElse(null));
 
-		studentRepository.deleteById(1L);
-		System.out.println("Log after delete student with id 1");
+		var fetchStudentFromDB1 = studentRepository.findAllByAddress("Phnom Penh");
+		System.out.println("Students with address Phnom Penh");
+		fetchStudentFromDB1.forEach(System.out::println);
 
-		students = studentRepository.findAll();
-		System.out.println("Log after fetch all students: " + students);
+		var fetchStudentFromDB2 = studentRepository.findAllByAgeGreaterThan(20);
+		System.out.println("Students with age greater than 20");
+		fetchStudentFromDB2.forEach(System.out::println);
 	}
 
 }
