@@ -1,6 +1,8 @@
 package com.rean.springbootmaster;
 
 import com.rean.springbootmaster.model.Student;
+import com.rean.springbootmaster.model.StudentIdCard;
+import com.rean.springbootmaster.repository.StudentIdCardRepository;
 import com.rean.springbootmaster.repository.StudentRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class SpringBootMasterApplication {
 
 	@Autowired
 	StudentRepository studentRepository;
+	@Autowired
+	StudentIdCardRepository studentIdCardRepository;
 
 	@PostConstruct
 	public void init() {
@@ -51,20 +55,20 @@ public class SpringBootMasterApplication {
 						.build()
 		);
 
-		// Save
-		studentRepository.saveAll(students);
+		// we don't need to save because we use cascadeType.ALL on studentIdCard
+		// studentRepository.saveAll(students);
 
-		// Sorting
-		Sort sort = Sort.by(Sort.Direction.ASC, "address");
-		List<Student> studentList = studentRepository.findAll(sort);
-		System.out.println("Student List: ");
-		studentList.forEach(System.out::println);
+		students.forEach(student -> {
+			StudentIdCard studentIdCard = StudentIdCard.builder()
+					.cardNumber("ID" + student.getPhoneNumber())
+					.student(student)
+					.build();
+			studentIdCardRepository.save(studentIdCard);
+		});
 
-		// Pagination
-		PageRequest pageRequest = PageRequest
-				.of(0, 2, Sort.by("address").ascending());
-		Page<Student> studentsPage = studentRepository.findAll(pageRequest);
-		System.out.println("Student Page: " + pageRequest.getPageSize());
+		System.out.println("Find all students");
+		studentRepository.findAll().forEach(System.out::println);
+
 
 	}
 
