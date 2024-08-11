@@ -14,7 +14,6 @@ import java.util.Objects;
 public class EnrolmentId implements Serializable {
 
 
-
     @Column(name = "student_id")
     private Long studentId;
     @Column(name = "course_id")
