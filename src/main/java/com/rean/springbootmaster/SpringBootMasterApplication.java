@@ -1,6 +1,7 @@
 package com.rean.springbootmaster;
 
 import com.rean.springbootmaster.model.Book;
+import com.rean.springbootmaster.model.Course;
 import com.rean.springbootmaster.model.Student;
 import com.rean.springbootmaster.model.StudentIdCard;
 import com.rean.springbootmaster.repository.StudentIdCardRepository;
@@ -9,13 +10,9 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootApplication
 public class SpringBootMasterApplication {
@@ -39,6 +36,7 @@ public class SpringBootMasterApplication {
 				.phoneNumber("089256789")
 				.address("Phnom Penh")
 				.books(new ArrayList<>())
+				.courses(new ArrayList<>())
 				.build();
 
 		student.addBook(Book.builder()
@@ -63,12 +61,21 @@ public class SpringBootMasterApplication {
 				.student(student)
 				.build());
 
-		StudentIdCard studentIdCard = StudentIdCard.builder()
+		student.setStudentIdCard(StudentIdCard.builder()
 				.cardNumber("ID" + student.getPhoneNumber())
 				.student(student)
-				.build();
+				.build());
 
-		student.setStudentIdCard(studentIdCard);
+		student.enrolToCourse(Course.builder()
+				.name("Java")
+				.department("Programming")
+				.students(new ArrayList<>())
+				.build());
+		student.enrolToCourse(Course.builder()
+				.name("Spring")
+				.department("Programming")
+				.students(new ArrayList<>())
+				.build());
 		studentRepository.save(student);
 
 		var studentFetchFromDB = studentRepository.findById(1L);

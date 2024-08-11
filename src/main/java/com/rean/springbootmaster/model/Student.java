@@ -122,4 +122,38 @@ public class Student {
             book.setStudent(null);
         }
     }
+
+    // many to many relationship between student and course
+    @ToString.Exclude
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}
+    )
+    @JoinTable(
+            name = "enrolment",
+            joinColumns = @JoinColumn(
+                    name = "student_id",
+                    foreignKey = @ForeignKey(
+                            name = "enrolment_student_fk"
+                    )
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "course_id",
+                    foreignKey = @ForeignKey(
+                            name = "enrolment_course_fk"
+                    )
+            )
+    )
+    private List<Course> courses = new ArrayList<>();
+
+    public void enrolToCourse(Course course) {
+        courses.add(course);
+        course.getStudents().add(this);
+    }
+
+    public void unEnrolToCourse(Course course) {
+        if (this.courses.contains(course)) {
+            this.courses.remove(course);
+            course.getStudents().remove(this);
+        }
+    }
 }
