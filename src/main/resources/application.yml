@@ -3,9 +3,9 @@ server:
 
 spring:
   application:
-    name: customer-services
+    name: student-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_io
+    url: jdbc:postgresql://localhost:5432/codestorykh
     password: password
     username: codestorykh
   jpa:
@@ -15,7 +15,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: false
+
 # Swagger Configuration
 # access url: http://localhost:8080/swagger-ui/index.html#/
 codestorykh:
