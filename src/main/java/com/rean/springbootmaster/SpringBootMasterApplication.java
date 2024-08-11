@@ -1,5 +1,6 @@
 package com.rean.springbootmaster;
 
+import com.rean.springbootmaster.model.Book;
 import com.rean.springbootmaster.model.Student;
 import com.rean.springbootmaster.model.StudentIdCard;
 import com.rean.springbootmaster.repository.StudentIdCardRepository;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -28,56 +31,52 @@ public class SpringBootMasterApplication {
 	@PostConstruct
 	public void init() {
 
-		List<Student> students = List.of(
-				Student.builder()
-						.firstName("Rean")
-						.lastName("Code")
-						.age(25)
-						.email("code123@gmail.com")
-						.phoneNumber("089256789")
-						.address("Phnom Penh")
-						.build(),
-				Student.builder()
-						.firstName("Rean")
-						.lastName("Java")
-						.age(25)
-						.email("rean123@gmail.com")
-						.phoneNumber("0123456789")
-						.address("Kompong Cham")
-						.build(),
-				Student.builder()
-						.firstName("Rean")
-						.lastName("Spring")
-						.age(25)
-						.email("reanspring@gmail.com")
-						.phoneNumber("086789123")
-						.address("Kompong Thom")
-						.build()
-		);
+		Student student = Student.builder()
+				.firstName("Rean")
+				.lastName("Code")
+				.age(25)
+				.email("code123@gmail.com")
+				.phoneNumber("089256789")
+				.address("Phnom Penh")
+				.books(new ArrayList<>())
+				.build();
 
-		// we don't need to save because we use cascadeType.ALL on studentIdCard
-		// studentRepository.saveAll(students);
+		student.addBook(Book.builder()
+				.title("Java")
+				.description("Java is programming language")
+				.author("Rean")
+				.price(20.0)
+				.quantity(10)
+				.category("Programming")
+				.createdAt(LocalDateTime.now())
+				.student(student)
+				.build());
 
-		students.forEach(student -> {
-			StudentIdCard studentIdCard = StudentIdCard.builder()
-					.cardNumber("ID" + student.getPhoneNumber())
-					.student(student)
-					.build();
-			studentIdCardRepository.save(studentIdCard);
+		student.addBook(Book.builder()
+				.title("Spring")
+				.description("Spring is a framework")
+				.author("Rean")
+				.price(30.0)
+				.quantity(5)
+				.category("Programming")
+				.createdAt(LocalDateTime.now())
+				.student(student)
+				.build());
+
+		StudentIdCard studentIdCard = StudentIdCard.builder()
+				.cardNumber("ID" + student.getPhoneNumber())
+				.student(student)
+				.build();
+
+		student.setStudentIdCard(studentIdCard);
+		studentRepository.save(student);
+
+		var studentFetchFromDB = studentRepository.findById(1L);
+		studentFetchFromDB.ifPresent(student1 -> {
+			System.out.println(student1);
+			// lazy loading will not fetch book when we get student
+			//System.out.println(student1.getBooks());
 		});
-
-		System.out.println("Find all students");
-		studentRepository.findAll().forEach(System.out::println);
-
-		System.out.println("Find all student id card");
-		studentIdCardRepository.findAll().forEach(System.out::println);
-
-
-		// We need to add this cascade = CascadeType.ALL or orphanRemoval = true on studentIdCard in Student class,
-		// if we want to delete student and studentIdCard
-		studentRepository.deleteById(1L);
-		System.out.println("Find all students after delete");
-		studentRepository.findAll().forEach(System.out::println);
 	}
 
 }

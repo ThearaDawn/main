@@ -3,6 +3,9 @@ package com.rean.springbootmaster.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -79,8 +82,44 @@ public class Student {
     // bi-directional relationship between student and studentIdCard when getting student we can get studentIdCard
     @OneToOne(
             mappedBy = "student",
-            orphanRemoval = true
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
             //cascade = CascadeType.ALL // when we save student we save studentIdCard, when we delete student we delete studentIdCard
     )
     private StudentIdCard studentIdCard;
+
+    public void setStudentIdCard(StudentIdCard studentIdCard) {
+        if (studentIdCard == null) {
+            if (this.studentIdCard != null) {
+                this.studentIdCard.setStudent(null);
+            }
+        } else {
+            studentIdCard.setStudent(this);
+        }
+        this.studentIdCard = studentIdCard;
+    }
+
+    // one to many relationship between student and book
+    @ToString.Exclude
+    @OneToMany(
+            mappedBy = "student",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY // lazy loading when we get student we don't get books
+    )
+    private List<Book> books = new ArrayList<>();
+
+    public void addBook(Book book) {
+        if (!this.books.contains(book)) {
+            this.books.add(book);
+            book.setStudent(this);
+        }
+    }
+
+    public void removeBook(Book book) {
+        if (this.books.contains(book)) {
+            this.books.remove(book);
+            book.setStudent(null);
+        }
+    }
 }
