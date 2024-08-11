@@ -39,11 +39,16 @@ public class StudentIdCard {
     )
     private String cardNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ToString.Exclude // exclude the bi-directional relationship to avoid recursion
+    @OneToOne(
+            cascade = CascadeType.ALL
+            //fetch = FetchType.EAGER
+    )
     @JoinColumn(
             name = "student_id",
             referencedColumnName = "id"
     )
     private Student student;
+
 
 }

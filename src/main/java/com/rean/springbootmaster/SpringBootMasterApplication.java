@@ -69,7 +69,15 @@ public class SpringBootMasterApplication {
 		System.out.println("Find all students");
 		studentRepository.findAll().forEach(System.out::println);
 
+		System.out.println("Find all student id card");
+		studentIdCardRepository.findAll().forEach(System.out::println);
 
+
+		// We need to add this cascade = CascadeType.ALL or orphanRemoval = true on studentIdCard in Student class,
+		// if we want to delete student and studentIdCard
+		studentRepository.deleteById(1L);
+		System.out.println("Find all students after delete");
+		studentRepository.findAll().forEach(System.out::println);
 	}
 
 }

@@ -74,4 +74,13 @@ public class Student {
             columnDefinition = "TEXT"
     )
     private String address;
+
+
+    // bi-directional relationship between student and studentIdCard when getting student we can get studentIdCard
+    @OneToOne(
+            mappedBy = "student",
+            orphanRemoval = true
+            //cascade = CascadeType.ALL // when we save student we save studentIdCard, when we delete student we delete studentIdCard
+    )
+    private StudentIdCard studentIdCard;
 }
