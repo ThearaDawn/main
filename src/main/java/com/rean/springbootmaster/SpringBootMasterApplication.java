@@ -40,6 +40,13 @@ public class SpringBootMasterApplication {
 		var fetchStudentFromDB2 = studentRepository.findAllByAgeGreaterThan(20);
 		System.out.println("Students with age greater than 20");
 		fetchStudentFromDB2.forEach(System.out::println);
+
+		studentRepository.deleteStudentById(1);
+		System.out.println("Student with id 1 is deleted");
+
+		var fetchStudentFromDB3 = studentRepository.findAll();
+		System.out.println("All students in DB");
+		fetchStudentFromDB3.forEach(System.out::println);
 	}
 
 }
