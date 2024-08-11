@@ -18,10 +18,39 @@ public class Student {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
+    @Column(
+            name = "first_name",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String firstName;
+    @Column(
+            name = "last_name",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String lastName;
+    @Column(
+            name = "age",
+            nullable = false
+    )
     private Integer age;
+    @Column(
+            name = "email",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String email;
+    @Column(
+            name = "phone_number",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String phoneNumber;
+    @Column(
+            name = "address",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String address;
 }
