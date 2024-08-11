@@ -46,8 +46,17 @@ public class Course {
 
 
     @ToString.Exclude
-    @ManyToMany(
-            mappedBy = "courses"
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "course"
     )
-    private List<Student> students = new ArrayList<>();
+    private List<Enrolment> enrolments = new ArrayList<>();
+
+    public void addEnrolToCourse(Enrolment enrolment) {
+        enrolments.add(enrolment);
+    }
+
+    public void removeEnrolToCourse(Enrolment enrolment) {
+        this.enrolments.remove(enrolment);
+    }
 }

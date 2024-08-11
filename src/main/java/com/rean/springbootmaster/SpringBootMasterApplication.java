@@ -1,9 +1,6 @@
 package com.rean.springbootmaster;
 
-import com.rean.springbootmaster.model.Book;
-import com.rean.springbootmaster.model.Course;
-import com.rean.springbootmaster.model.Student;
-import com.rean.springbootmaster.model.StudentIdCard;
+import com.rean.springbootmaster.model.*;
 import com.rean.springbootmaster.repository.StudentIdCardRepository;
 import com.rean.springbootmaster.repository.StudentRepository;
 import jakarta.annotation.PostConstruct;
@@ -36,7 +33,7 @@ public class SpringBootMasterApplication {
 				.phoneNumber("089256789")
 				.address("Phnom Penh")
 				.books(new ArrayList<>())
-				.courses(new ArrayList<>())
+				.enrolments(new ArrayList<>())
 				.build();
 
 		student.addBook(Book.builder()
@@ -66,16 +63,22 @@ public class SpringBootMasterApplication {
 				.student(student)
 				.build());
 
-		student.enrolToCourse(Course.builder()
+		student.addEnrolToCourse(new Enrolment(
+				new EnrolmentId(student.getId(),1L),
+				student,Course.builder()
 				.name("Java")
 				.department("Programming")
-				.students(new ArrayList<>())
-				.build());
-		student.enrolToCourse(Course.builder()
+				.enrolments(new ArrayList<>())
+				.build(), LocalDateTime.now())
+				);
+		student.addEnrolToCourse(new Enrolment(
+				new EnrolmentId(student.getId(),2L),
+				student,Course.builder()
 				.name("Spring")
 				.department("Programming")
-				.students(new ArrayList<>())
-				.build());
+				.enrolments(new ArrayList<>())
+				.build(), LocalDateTime.now())
+				);
 		studentRepository.save(student);
 
 		var studentFetchFromDB = studentRepository.findById(1L);

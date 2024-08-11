@@ -125,35 +125,18 @@ public class Student {
 
     // many to many relationship between student and course
     @ToString.Exclude
-    @ManyToMany(
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE},
+            mappedBy = "student"
     )
-    @JoinTable(
-            name = "enrolment",
-            joinColumns = @JoinColumn(
-                    name = "student_id",
-                    foreignKey = @ForeignKey(
-                            name = "enrolment_student_fk"
-                    )
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "course_id",
-                    foreignKey = @ForeignKey(
-                            name = "enrolment_course_fk"
-                    )
-            )
-    )
-    private List<Course> courses = new ArrayList<>();
 
-    public void enrolToCourse(Course course) {
-        courses.add(course);
-        course.getStudents().add(this);
+    private List<Enrolment> enrolments = new ArrayList<>();
+
+    public void addEnrolToCourse(Enrolment enrolment) {
+        enrolments.add(enrolment);
     }
 
-    public void unEnrolToCourse(Course course) {
-        if (this.courses.contains(course)) {
-            this.courses.remove(course);
-            course.getStudents().remove(this);
-        }
+    public void removeEnrolToCourse(Enrolment enrolment) {
+        this.enrolments.remove(enrolment);
     }
 }
